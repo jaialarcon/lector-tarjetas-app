@@ -39,7 +39,38 @@
   </ion-list>
   <ion-button (click) = "configurar()"  color="success">Configurar</ion-button>
 
-
-
+  <ion-item>
+    <ion-title style="font-style: bolder" color="bscYellow" class="titulo">Control de acceso</ion-title>
+    <ion-grid [hidden]="false">
+      <ion-row>
+        <ion-col size="11.8" size-lg class="padding-0">
+          <ion-card class="noticia">
+            <ion-row>
+              <ion-col class="square" size="4">
+                <img
+                  class="sqare"
+                  src="../../assets/img/bsc-logo.png"
+                />
+              </ion-col>
+              <ion-col class="padding-0" size="8">
+                <ion-grid class="padding-0">
+                  <ion-row>
+                    <ion-col size="12" size-lg class="bottom-line">
+                      <span class="bold tituloNoticia"
+                        >PUERTA {{info.puerta}}</span
+                      >
+                    </ion-col>
+                    <ion-col size="12" size-lg>
+                      <span class="bold">LOCALIDADES {{info.localidades}}</span>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
 
 </ion-app>
