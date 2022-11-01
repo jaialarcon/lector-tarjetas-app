@@ -26,4 +26,20 @@
     </ion-menu>
     <ion-router-outlet id="main-content"></ion-router-outlet>
   </ion-split-pane> -->
+  <ion-list>
+    <ion-item>
+      <ion-label>Ingrese su IP:</ion-label>
+      <ion-input  [(ngModel)]="ip" placeholder="Enter IP"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Ingrese su Puerto:</ion-label>
+      <ion-input [(ngModel)]="port" type="number" placeholder="Enter Port Number"></ion-input>
+    </ion-item>
+
+  </ion-list>
+  <ion-button (click) = "configurar()"  color="success">Configurar</ion-button>
+
+
+
+
 </ion-app>
