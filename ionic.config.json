@@ -1,0 +1,7 @@
+{
+  "name": "lector-tarjetas-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
