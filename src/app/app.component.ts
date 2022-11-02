@@ -18,7 +18,9 @@ export class AppComponent implements OnInit {
   public requestURL: string;
   readerMode$: any;
   info: any;
-  constructor(private nfc: NFC, private ndef: Ndef, private cardService: CardsService,) { }
+  constructor(private nfc: NFC,
+    private ndef: Ndef,
+    private cardService: CardsService,) { }
 
   async ngOnInit() {
     this.info = {
@@ -57,6 +59,7 @@ export class AppComponent implements OnInit {
   }
 
   configurar() {
+    this.requestURL = '';
     //http://localhost:8080/cardService/v1/findByCode/6834452
     this.requestURL = 'http:' + this.ip + ':' + this.port + 'cardService/V1';
     environment.apiURL = this.requestURL;
@@ -105,25 +108,29 @@ export class AppComponent implements OnInit {
   }
 
   async processRead() {
-    await this.readCard();
-    this.card = JSON.parse(localStorage.getItem('tarjeta'));
-    console.log(this.card);
+    try {
+      await this.readCard();
+      this.card = JSON.parse(localStorage.getItem('tarjeta'));
+      console.log(this.card);
 
-    const serialNumber = this.card.serialNumber;
-    const processedString = this.convertNumber(serialNumber, 16, 2);
-    const cardCode = this.convBin2Dec(processedString);
-    const results = await (await this.cardService.findByCode(cardCode)).toPromise();
-    this.cardInfo = results[0];
-    if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
-      this.hasResponse = true;
-      const responseUpdate = await (await this.cardService.updateState(this.cardInfo)).toPromise();
-      alert('Access Granted and updated');
-      console.log('Access Granted and updated');
-    } else {
-      alert(this.cardInfo.message);
-      this.hasResponse = false;
+      const serialNumber = this.card.id;
+      const processedString = this.convertNumber(serialNumber, 16, 2);
+      const cardCode = this.convBin2Dec(processedString);
+      const results = await (await this.cardService.findByCode(cardCode)).toPromise();
+      this.cardInfo = results[0];
+      if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
+        this.hasResponse = true;
+        const responseUpdate = await (await this.cardService.updateState(this.cardInfo)).toPromise();
+        alert('Access Granted and updated');
+        console.log('Access Granted and updated');
+      } else {
+        alert(this.cardInfo.message);
+        this.hasResponse = false;
+      }
+
+    } catch (ex) {
+      console.log(ex);
     }
-
   }
 }
 
