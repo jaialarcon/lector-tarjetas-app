@@ -34,8 +34,8 @@ export class AppComponent implements OnInit {
     this.readerMode$ = this.nfc.readerMode(flags).subscribe(
       (tag) => {
         console.log(JSON.stringify(tag));
-        localStorage.setItem('tarjeta', JSON.stringify(tag));
-        console.log(tag);
+        console.log('decoded tag id', this.nfc.bytesToHexString(tag.id));
+        localStorage.setItem('tarjeta', JSON.stringify(this.nfc.bytesToHexString(tag.id)));
       },
       (err) => console.log('Error reading tag', err)
     );
