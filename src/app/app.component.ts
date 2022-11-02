@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NFC, Ndef } from '@awesome-cordova-plugins/nfc/ngx';
+import { CardsService } from 'src/services/cards.service';
+import {environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +9,16 @@ import { NFC, Ndef } from '@awesome-cordova-plugins/nfc/ngx';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit{
+  hasResponse: boolean;
   public ip: string;
+  card: any;
+  cardInfo: any;
+  public dir: string;
   public port: string;
   public requestURL: string;
   readerMode$: any;
   info: any;
-  constructor(private nfc: NFC, private ndef: Ndef) {}
+  constructor(private nfc: NFC, private ndef: Ndef,private cardService: CardsService,) {}
 
   async ngOnInit() {
     this.info = {
@@ -26,7 +32,9 @@ export class AppComponent implements OnInit{
     // eslint-disable-next-line no-bitwise
     const flags = this.nfc.FLAG_READER_NFC_A | this.nfc.FLAG_READER_NFC_V;
     this.readerMode$ = this.nfc.readerMode(flags).subscribe(
-      (tag) => console.log(JSON.stringify(tag)),
+      (tag) =>{console.log(JSON.stringify(tag));
+      localStorage.setItem('tarjeta',JSON.stringify(tag));
+      } ,
       (err) => console.log('Error reading tag', err)
     );
   }
@@ -48,6 +56,8 @@ export class AppComponent implements OnInit{
 configurar(){
   //http://localhost:8080/cardService/v1/findByCode/6834452
   this.requestURL = 'http:'+this.ip+':'+this.port+'cardService/V1';
+  environment.apiURL = this.requestURL;
+
 
 }
 
@@ -89,7 +99,26 @@ convertNumber(n: string, fromBase: number, toBase: number): string {
   return converted;//parseInt(n.toString(), fromBase).toString(toBase);
 }
 
-convBin2Dec(n: string){
+convBin2Dec(n: string): number{
+  return Number.parseInt(n, 10);
+}
+
+async processRead(){
+  this.card = JSON.parse(localStorage.getItem('tarjeta'));
+  const serialNumber = this.card.serialNumber;
+  const processedString = this.convertNumber(serialNumber,16,2);
+  const cardCode = this.convBin2Dec(processedString);
+  const results = await (await this.cardService.findByCode(cardCode)).toPromise();
+  this.cardInfo = results[0];
+  if(this.cardInfo.code !== null && this.cardInfo.estado === 'N'){
+    this.hasResponse = true;
+    const responseUpdate= await (await this.cardService.updateState(this.cardInfo)).toPromise();
+    alert('Access Granted and updated');
+    console.log('Access Granted and updated');
+  }else{
+    alert(this.cardInfo.message);
+    this.hasResponse = false;
+  }
 
 }
 }
