@@ -91,11 +91,11 @@ export class AppComponent implements OnInit {
         converted = parseInt(n, toBase).toString().substring(-23);
       }
       else {
-        converted = (parseInt(n, toBase)).toString(toBase);
+        converted = (parseInt(n, toBase)).toString();
       }
     }
     else {
-      converted = (parseInt(n, toBase)).toString(toBase);
+      converted = (parseInt(n, toBase)).toString();
     }
 
     return converted;//parseInt(n.toString(), fromBase).toString(toBase);
