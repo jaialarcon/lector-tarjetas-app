@@ -106,24 +106,29 @@ export class AppComponent implements OnInit {
   }
 
   async processRead() {
-    await this.readCard();
-    this.card = JSON.parse(localStorage.getItem('tarjeta'));
-    console.log(this.card);
-    const serialNumber = this.card;
-    const processedString = this.convertNumber(serialNumber, 16, 2);
-    const cardCode = this.convertNumber(processedString, 2, 10);
-    console.log("NUMERO ESPERADO:",cardCode);
-    const results = await (await this.cardService.findByCode(this.requestURL,Number.parseInt(cardCode, 10))).toPromise();
-    this.cardInfo = results[0];
-    if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
-      this.hasResponse = true;
-      const responseUpdate = await (await this.cardService.updateState(this.requestURL,this.cardInfo)).toPromise();
-      alert('Access Granted and updated');
-      console.log('Access Granted and updated');
-    } else {
-      alert(this.cardInfo.message);
-      this.hasResponse = false;
-    }
+    try {
+      await this.readCard();
+      this.card = JSON.parse(localStorage.getItem('tarjeta'));
+      console.log(this.card);
+      const serialNumber = this.card;
+      const processedString = this.convertNumber(serialNumber, 16, 2);
+      const cardCode = this.convertNumber(processedString, 2, 10);
+      console.log("NUMERO ESPERADO:", cardCode);
+      const results = await (await this.cardService.findByCode(this.requestURL, Number.parseInt(cardCode, 10))).toPromise();
+      this.cardInfo = results[0];
+      if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
+        this.hasResponse = true;
+        const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
+        alert('Access Granted and updated');
+        console.log('Access Granted and updated');
+      } else {
+        alert(this.cardInfo.message);
+        this.hasResponse = false;
+      }
 
+    } catch (ex) {
+      console.log(ex);
+
+    }
   }
 }
