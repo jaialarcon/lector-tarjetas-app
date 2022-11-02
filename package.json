@@ -15,8 +15,7 @@
     "e2e": "ng e2e",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "info": "ionic info",
-    "prepare": "husky install"
+    "info": "ionic info"
   },
   "private": true,
   "dependencies": {
