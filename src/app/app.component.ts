@@ -31,8 +31,6 @@ export class AppComponent implements OnInit {
     // Once the reader mode is enabled, any tags that are scanned are sent to the subscriber
     // eslint-disable-next-line no-bitwise
     const flags = this.nfc.FLAG_READER_NFC_A | this.nfc.FLAG_READER_NFC_V;
-    console.log('Una tarjeta cerca');
-
     this.readerMode$ = this.nfc.readerMode(flags).subscribe(
       (tag) => {
         console.log(JSON.stringify(tag));
@@ -57,12 +55,11 @@ export class AppComponent implements OnInit {
 
     this.nfc.addNdefListener(this.onNfc);
   }
+
   configurar() {
     //http://localhost:8080/cardService/v1/findByCode/6834452
     this.requestURL = 'http:' + this.ip + ':' + this.port + 'cardService/V1';
     environment.apiURL = this.requestURL;
-
-
   }
 
   convertHex2Bin(hex: string) {
