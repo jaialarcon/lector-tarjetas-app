@@ -88,14 +88,14 @@ export class AppComponent implements OnInit {
     // eslint-disable-next-line eqeqeq
     if (fromBase === 16) {
       if (n.length > 23) {
-        converted = parseInt(n, fromBase).toString(toBase).substring(-23);
+        converted = parseInt(n, toBase).toString().substring(-23);
       }
       else {
-        converted = (parseInt(n, fromBase)).toString(toBase);
+        converted = (parseInt(n, toBase)).toString(toBase);
       }
     }
     else {
-      converted = (parseInt(n, fromBase)).toString(toBase);
+      converted = (parseInt(n, toBase)).toString(toBase);
     }
 
     return converted;//parseInt(n.toString(), fromBase).toString(toBase);
