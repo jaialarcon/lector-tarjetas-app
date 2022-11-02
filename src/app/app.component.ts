@@ -18,7 +18,13 @@ export class AppComponent implements OnInit {
   public requestURL: string;
   readerMode$: any;
   info: any;
+<<<<<<< HEAD
   constructor(private nfc: NFC, private ndef: Ndef, private cardService: CardsService,) { }
+=======
+  constructor(private nfc: NFC,
+    private ndef: Ndef,
+    private cardService: CardsService,) { }
+>>>>>>> ebe8c4963fa27e72722d490a5ef130edd8917c09
 
   async ngOnInit() {
     this.info = {
@@ -34,8 +40,12 @@ export class AppComponent implements OnInit {
     this.readerMode$ = this.nfc.readerMode(flags).subscribe(
       (tag) => {
         console.log(JSON.stringify(tag));
+<<<<<<< HEAD
         console.log('decoded tag id', this.nfc.bytesToHexString(tag.id));
         localStorage.setItem('tarjeta', JSON.stringify(this.nfc.bytesToHexString(tag.id)));
+=======
+        localStorage.setItem('tarjeta', JSON.stringify(tag));
+>>>>>>> ebe8c4963fa27e72722d490a5ef130edd8917c09
         console.log(tag);
       },
       (err) => console.log('Error reading tag', err)
@@ -58,6 +68,10 @@ export class AppComponent implements OnInit {
   }
 
   configurar() {
+<<<<<<< HEAD
+=======
+    this.requestURL = '';
+>>>>>>> ebe8c4963fa27e72722d490a5ef130edd8917c09
     //http://localhost:8080/cardService/v1/findByCode/6834452
     this.requestURL = 'http:' + this.ip + ':' + this.port + 'cardService/V1';
     environment.apiURL = this.requestURL;
@@ -97,6 +111,7 @@ export class AppComponent implements OnInit {
     else {
       converted = (parseInt(n, fromBase)).toString(toBase);
     }
+<<<<<<< HEAD
 
     return converted;//parseInt(n.toString(), fromBase).toString(toBase);
   }
@@ -126,4 +141,39 @@ export class AppComponent implements OnInit {
     }
 
   }
+=======
+
+    return converted;//parseInt(n.toString(), fromBase).toString(toBase);
+  }
+
+  convBin2Dec(n: string): number {
+    return Number.parseInt(n, 10);
+  }
+
+  async processRead() {
+    try {
+      await this.readCard();
+      this.card = JSON.parse(localStorage.getItem('tarjeta'));
+      console.log(this.card);
+
+      const serialNumber = this.card.id;
+      const processedString = this.convertNumber(serialNumber, 16, 2);
+      const cardCode = this.convBin2Dec(processedString);
+      const results = await (await this.cardService.findByCode(cardCode)).toPromise();
+      this.cardInfo = results[0];
+      if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
+        this.hasResponse = true;
+        const responseUpdate = await (await this.cardService.updateState(this.cardInfo)).toPromise();
+        alert('Access Granted and updated');
+        console.log('Access Granted and updated');
+      } else {
+        alert(this.cardInfo.message);
+        this.hasResponse = false;
+      }
+
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+>>>>>>> ebe8c4963fa27e72722d490a5ef130edd8917c09
 }
