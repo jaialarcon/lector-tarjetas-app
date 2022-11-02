@@ -108,8 +108,7 @@ export class AppComponent implements OnInit {
     await this.readCard();
     this.card = JSON.parse(localStorage.getItem('tarjeta'));
     console.log(this.card);
-
-    const serialNumber = this.card.serialNumber;
+    const serialNumber = this.card;
     const processedString = this.convertNumber(serialNumber, 16, 2);
     const cardCode = this.convBin2Dec(processedString);
     const results = await (await this.cardService.findByCode(cardCode)).toPromise();
