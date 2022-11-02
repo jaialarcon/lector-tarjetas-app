@@ -88,10 +88,14 @@ export class AppComponent implements OnInit {
     // eslint-disable-next-line eqeqeq
     if (fromBase === 16) {
       if (n.length > 23) {
+        console.log("tiene >23");
         converted = parseInt(n, toBase).toString().substring(-23);
+        console.log("converted provisional >23",converted);
       }
       else {
+        console.log("no tiene");
         converted = (parseInt(n, toBase)).toString();
+        console.log("converted provisional <=23",converted);
       }
     }
     else {
