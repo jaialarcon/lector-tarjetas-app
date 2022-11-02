@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/quotes */
 import { Component, OnInit } from '@angular/core';
 import { NFC, Ndef } from '@awesome-cordova-plugins/nfc/ngx';
 import { CardsService } from 'src/services/cards.service';
@@ -110,8 +111,9 @@ export class AppComponent implements OnInit {
     console.log(this.card);
     const serialNumber = this.card;
     const processedString = this.convertNumber(serialNumber, 16, 2);
-    const cardCode = this.convBin2Dec(processedString);
-    const results = await (await this.cardService.findByCode(cardCode)).toPromise();
+    const cardCode = this.convertNumber(processedString, 2, 10);
+    console.log("NUMERO ESPERADO:",cardCode);
+    const results = await (await this.cardService.findByCode(Number.parseInt(cardCode, 10))).toPromise();
     this.cardInfo = results[0];
     if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
       this.hasResponse = true;
