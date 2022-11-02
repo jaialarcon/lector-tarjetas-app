@@ -18,10 +18,10 @@ export class CardsService {
     // this.urlProp = hostBarceApiProp;
   }
 
-  async findByCode(url: string,codigo: any): Promise<Observable<any>> {
+  async findByCode(urlapi: string,codigo: any): Promise<Observable<any>> {
     let $URL;
     // eslint-disable-next-line prefer-const
-    $URL = `${url}/findByCode/` + codigo;
+    $URL = urlapi+`/findByCode/` + codigo;
 
     const http_options_token = {
       headers: new HttpHeaders({
@@ -37,10 +37,10 @@ export class CardsService {
     return this.httpClient.get<any>($URL, http_options_token);
   }
 
-  async updateState(url: string,card: any): Promise<Observable<any>> {
+  async updateState(urlapi: string,card: any): Promise<Observable<any>> {
     let $URL;
     // eslint-disable-next-line prefer-const
-    $URL = `${url}/updateState`;
+    $URL = urlapi+`/updateState`;
 
     const http_options_token = {
       headers: new HttpHeaders({

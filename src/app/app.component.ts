@@ -58,6 +58,7 @@ export class AppComponent implements OnInit {
   }
 
   configurar() {
+    this.requestURL = "";
     //http://localhost:8080/cardService/v1/findByCode/6834452
     this.requestURL = 'http:' + this.ip + ':' + this.port + '/cardService/V1';
     environment.apiURL = this.requestURL;
