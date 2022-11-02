@@ -29,7 +29,7 @@
   <ion-list>
     <ion-item>
       <ion-label>Ingrese su IP:</ion-label>
-      <ion-input  [(ngModel)]="ip" placeholder="Enter IP"></ion-input>
+      <ion-input [(ngModel)]="ip" placeholder="Enter IP"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label>Ingrese su Puerto:</ion-label>
@@ -37,8 +37,8 @@
     </ion-item>
 
   </ion-list>
-  <ion-button (click) = "configurar()"  color="success">Configurar</ion-button>
-  <ion-button (click) = "processRead()"  color="warning">Leer Tarjeta</ion-button>
+  <ion-button (click)="configurar()" color="success">Configurar</ion-button>
+  <ion-button (click)="processRead()" color="warning">Leer Tarjeta</ion-button>
 
 
   <ion-item>
@@ -49,24 +49,19 @@
           <ion-card class="noticia">
             <ion-row>
               <ion-col class="square" size="4">
-                <img
-                  class="sqare"
-                  src="../../assets/img/bsc-logo.png"
-                />
+                <img class="sqare" src="../../assets/img/bsc-logo.png" />
               </ion-col>
               <ion-col class="padding-0" size="8">
                 <ion-grid class="padding-0">
                   <ion-row>
                     <ion-col size="12" size-lg class="bottom-line">
-                      <span class="bold tituloNoticia"
-                        >PUERTA {{this.cardInfo.puerta}}</span
-                      >
+                      <span class="bold tituloNoticia">PUERTA {{this.cardInfo?.puerta}}</span>
                     </ion-col>
                     <ion-col size="12" size-lg>
-                      <span class="bold">LOCALIDAD {{this.cardInfo.localidad}}</span>
+                      <span class="bold">LOCALIDAD {{this.cardInfo?.localidad}}</span>
                     </ion-col>
                     <ion-col size="12" size-lg>
-                      <span class="bold">Código {{this.cardInfo.codigo}}</span>
+                      <span class="bold">Código {{this.cardInfo?.codigo}}</span>
                     </ion-col>
                   </ion-row>
                 </ion-grid>
