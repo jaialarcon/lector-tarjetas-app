@@ -60,8 +60,8 @@ export class AppComponent implements OnInit {
   configurar() {
     this.requestURL = "";
     //http://localhost:8080/cardService/v1/findByCode/6834452
-    this.requestURL = 'http:' + this.ip + ':' + this.port + '/cardService/V1';
-    environment.apiURL = this.requestURL;
+    this.requestURL = 'http://' + this.ip + ':' + this.port + '/cardService/v1';
+    //environment.apiURL = this.requestURL;
   }
 
   convertHex2Bin(hex: string) {
@@ -88,16 +88,16 @@ export class AppComponent implements OnInit {
 
     // eslint-disable-next-line eqeqeq
     if (toBase === 2) {
-        converted = parseInt(n, fromBase).toString(toBase);
-        if(converted.length > 23){
-          console.log("tiene >23");
-          converted = converted.slice(-23);
-          console.log("converted provisional >23",converted);
-        }else{
-          console.log("no tiene");
-          converted = converted;
-          console.log("converted provisional <23",converted);
-        }
+      converted = parseInt(n, fromBase).toString(toBase);
+      if (converted.length > 23) {
+        console.log("tiene >23");
+        converted = converted.slice(-23);
+        console.log("converted provisional >23", converted);
+      } else {
+        console.log("no tiene");
+        converted = converted;
+        console.log("converted provisional <23", converted);
+      }
 
     }
     else {
