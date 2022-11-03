@@ -1,21 +1,22 @@
 <ion-app>
   <ion-content>
-    <ion-list>
+    <ion-list style="text-align: center;">
       <ion-item>
         <ion-label>Ingrese su IP:</ion-label>
-        <ion-input [(ngModel)]="ip" placeholder="Enter IP" [readonly]="editConf"></ion-input>
+        <ion-input [(ngModel)]="ip" placeholder="Enter IP" [disabled]="editConf"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>Ingrese su Puerto:</ion-label>
-        <ion-input [(ngModel)]="port" type="number" placeholder="Enter Port Number" [readonly]="editConf"></ion-input>
+        <ion-input [(ngModel)]="port" type="number" placeholder="Enter Port Number" [disabled]="editConf"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-button slot="start" (click)="configurar()" color="warning">Configurar</ion-button>
-        <ion-button slot="end" (click)="saveConfig()" color="success">Guardar</ion-button>
+        <ion-button [disabled]="!editConf" slot="start" (click)="configurar()" color="warning">Configurar</ion-button>
+        <ion-button [disabled]="editConf" slot="end" (click)="saveConfig()" color="success">Guardar</ion-button>
       </ion-item>
 
-      <ion-item (click)="readCard()" button color="warning">
-        Activar lector
+      <ion-item>
+        <ion-button size="default" class="activate" (click)="readCard()" color="warning">Activar lector
+        </ion-button>
       </ion-item>
     </ion-list>
     <ion-item>

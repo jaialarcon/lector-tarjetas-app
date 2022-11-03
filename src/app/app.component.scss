@@ -117,3 +117,13 @@ ion-note {
 ion-item.selected {
   --color: var(--ion-color-primary);
 }
+
+.activate {
+  border-radius: 15px;
+  width: 95%;
+}
+
+item-inner {
+  --padding-inline-end: 0%;
+  --padding-right: 0%;
+}
