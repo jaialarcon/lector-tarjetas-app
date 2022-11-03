@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -28,12 +29,14 @@ export class CardsService {
 
     const http_options_token = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
+        //'Content-Type': 'application/json',
+        //Accept: 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE, PUT',
         'Access-Control-Allow-Headers':
           'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
+        Authorization: JSON.parse(sessionStorage.getItem('tokenP')) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+
       }),
     };
     console.log($URL);
