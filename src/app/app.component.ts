@@ -85,8 +85,6 @@ export class AppComponent implements OnInit {
     if (toBase === void 0) {
       toBase = 10;
     }
-
-    // eslint-disable-next-line eqeqeq
     if (toBase === 2) {
       converted = parseInt(n, fromBase).toString(toBase);
       if (converted.length > 23) {
@@ -120,7 +118,7 @@ export class AppComponent implements OnInit {
       const processedString = this.convertNumber(serialNumber, 16, 2);
       const cardCode = this.convertNumber(processedString, 2, 10);
       console.log("NUMERO ESPERADO:", cardCode);
-      const results = await (await this.cardService.findByCode(this.requestURL, Number.parseInt(cardCode, 10))).toPromise();
+      const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
       this.cardInfo = results[0];
       if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
         this.hasResponse = true;
