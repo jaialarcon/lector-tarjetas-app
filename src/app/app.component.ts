@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NFC, Ndef } from '@awesome-cordova-plugins/nfc/ngx';
 import { CardsService } from 'src/services/cards.service';
-import { environment } from '../environments/environment';
+import { ENV } from '../environments/environment';
 
 @Component({
   selector: 'app-root',

@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment, } from '../environments/environment';
+import { ENV, } from '../environments/environment';
 //import { NetworkInterface } from '@awesome-cordova-plugins/network-interface/ngx';
 
 @Injectable({
@@ -23,6 +23,7 @@ export class CardsService {
     // eslint-disable-next-line prefer-const
     console.log(urlapi);
 
+    // eslint-disable-next-line prefer-const
     $URL = urlapi + `/findByCode/` + codigo;
 
     const http_options_token = {
