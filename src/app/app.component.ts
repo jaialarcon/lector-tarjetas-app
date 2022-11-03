@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable curly */
 /* eslint-disable @typescript-eslint/quotes */
 import { Component, OnInit } from '@angular/core';
@@ -12,8 +13,9 @@ import { ENV } from '../environments/environment';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
+  contador = 0;
   editConf = true;
+  nfcEnabled = false;
   hasResponse: boolean;
   public ip?: string = '';
   public port?: string = '';
@@ -29,12 +31,47 @@ export class AppComponent implements OnInit {
     private cardService: CardsService,
     private share: SharedService
   ) { }
-
+  async ionViewWillEnter(){
+    this.nfcEnabled = await((await this.nfc.enabled()).toPromise());
+    console.log("IS ENABLED",this.nfcEnabled);
+    
+    if(this.nfcEnabled){
+      console.log("NFC ENABLED");
+      this.nfc.addNdefListener(() => {
+        console.log('successfully attached ndef listener');
+      }, (err) => {
+        console.log('error attaching ndef listener', err);
+      }).subscribe((event) => {
+        console.log('received ndef message. the tag contains: ', event.tag);
+        console.log('decoded tag id', this.nfc.bytesToHexString(event.tag.id));
+      });
+    }
+    else{
+      console.log("NFC DISABLED");
+    }
+  }
   async ngOnInit() {
     this.info = {
       puerta: 1,
       localidades: 'Palcos 1'
     };
+    this.nfcEnabled = await((await this.nfc.enabled()).toPromise());
+    console.log("IS ENABLED",this.nfcEnabled);
+    
+    if(this.nfcEnabled){
+      console.log("NFC ENABLED");
+      this.nfc.addNdefListener(() => {
+        console.log('successfully attached ndef listener');
+      }, (err) => {
+        console.log('error attaching ndef listener', err);
+      }).subscribe((event) => {
+        console.log('received ndef message. the tag contains: ', event.tag);
+        console.log('decoded tag id', this.nfc.bytesToHexString(event.tag.id));
+      });
+    }
+    else{
+      console.log("NFC DISABLED");
+    }
   }
   readCard() {
     // Read NFC Tag - Android
@@ -42,10 +79,55 @@ export class AppComponent implements OnInit {
     // eslint-disable-next-line no-bitwise
     const flags = this.nfc.FLAG_READER_NFC_A | this.nfc.FLAG_READER_NFC_V;
     this.readerMode$ = this.nfc.readerMode(flags).subscribe(
-      (tag) => {
+      async (tag) => {
         console.log(JSON.stringify(tag));
         console.log('decoded tag id', this.nfc.bytesToHexString(tag.id));
-        localStorage.setItem('tarjeta', JSON.stringify(this.nfc.bytesToHexString(tag.id)));
+        console.log("Estoy enabled");
+        if(this.contador > 0){
+          console.log("habilitado");
+          try {
+            //await this.readCard();
+            this.card = this.nfc.bytesToHexString(tag.id) ; 
+            console.log(this.card);
+            const serialNumber = this.card;
+            const processedString = this.convertNumber(serialNumber, 16, 2);
+            const cardCode = this.convertNumber(processedString, 2, 10);
+            console.log("NUMERO ESPERADO:", cardCode);
+            const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
+            if (results.code == null) {
+              this.cardInfo = results[0];
+              if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
+                this.hasResponse = true;
+                this.cardInfo.estado = 'S';
+                this.cardInfo.fecha_uso = new Date().toISOString();
+                const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
+                //alert('Access Granted and updated');
+                this.share.showToastColor('', 'Access Granted and updated', 's');
+                console.log('Access Granted and updated');
+                this.card = '';
+                //localStorage.removeItem('tarjeta');
+              } else {
+                alert(this.cardInfo.message);
+                this.hasResponse = false;
+                this.card = '';
+                //localStorage.removeItem('tarjeta');
+              }
+            } else {
+              this.card = '';
+              localStorage.removeItem('tarjeta');
+              this.share.showToastColor('', results.message, 'w');
+            }
+      
+          } catch (ex) {
+            console.log(ex);
+            this.share.showToastColor('', ex.message, 'd');
+          }
+          
+        }else{
+          this.share.showToastColor('', "NFC ACTIVADO", 's');
+          this.contador += 1;
+        }
+        //localStorage.setItem('tarjeta', JSON.stringify(this.nfc.bytesToHexString(tag.id)));
       },
       (err) => console.log('Error reading tag', err)
     );
@@ -145,11 +227,17 @@ export class AppComponent implements OnInit {
           const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
           alert('Access Granted and updated');
           console.log('Access Granted and updated');
+          this.card = '';
+          localStorage.removeItem('tarjeta');
         } else {
           alert(this.cardInfo.message);
           this.hasResponse = false;
+          this.card = '';
+          localStorage.removeItem('tarjeta');
         }
       } else {
+        this.card = '';
+        localStorage.removeItem('tarjeta');
         this.share.showToastColor('', results.message, 'w');
       }
 
