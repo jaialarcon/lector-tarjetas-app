@@ -253,7 +253,7 @@ export class SharedService {
     const toast = await this.toastController.create({
       header: head,
       message: msg,
-      duration: 11000,
+      duration: 1000,
       position: 'middle',
       color: col,
       animated: true,
