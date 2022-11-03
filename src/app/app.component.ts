@@ -5,6 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { NFC, Ndef } from '@awesome-cordova-plugins/nfc/ngx';
 import { CardsService } from 'src/services/cards.service';
 import { SharedService } from 'src/services/shared.services';
+import {BehaviorSubject, Observable} from 'rxjs';
 import { ENV } from '../environments/environment';
 
 @Component({
@@ -20,7 +21,8 @@ export class AppComponent implements OnInit {
   public ip?: string = '';
   public port?: string = '';
   card: any;
-  cardInfo: any;
+  cardcardInfo: any;
+  cardInfo: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   public dir: string;
   public requestURL: string;
   readerMode$: any;
@@ -73,7 +75,7 @@ export class AppComponent implements OnInit {
       console.log("NFC DISABLED");
     }
   }
-  readCard() {
+  async readCard() {
     // Read NFC Tag - Android
     // Once the reader mode is enabled, any tags that are scanned are sent to the subscriber
     // eslint-disable-next-line no-bitwise
@@ -94,12 +96,15 @@ export class AppComponent implements OnInit {
             const cardCode = this.convertNumber(processedString, 2, 10);
             console.log("NUMERO ESPERADO:", cardCode);
             const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
+            localStorage.setItem("results",JSON.stringify(results));
             if (results.code == null) {
+              this.setCardInfo(results[0]);
+              this.cardcardInfo = this.cardcardInfo.getValue();
               this.cardInfo = results[0];
-              if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
+              if (this.cardcardInfo.code !== null && this.cardcardInfo.estado === 'N') {
                 this.hasResponse = true;
-                this.cardInfo.estado = 'S';
-                this.cardInfo.fecha_uso = new Date().toISOString();
+                this.cardcardInfo.estado = 'S';
+                this.cardcardInfo.fecha_uso = new Date().toISOString();
                 const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
                 //alert('Access Granted and updated');
                 this.share.showToastColor('', 'Access Granted and updated', 's');
@@ -107,7 +112,7 @@ export class AppComponent implements OnInit {
                 this.card = '';
                 //localStorage.removeItem('tarjeta');
               } else {
-                alert(this.cardInfo.message);
+                alert(this.cardcardInfo.message);
                 this.hasResponse = false;
                 this.card = '';
                 //localStorage.removeItem('tarjeta');
@@ -131,6 +136,32 @@ export class AppComponent implements OnInit {
       },
       (err) => console.log('Error reading tag', err)
     );
+    const results2 =  JSON.parse(localStorage.getItem("results"));
+    if (results2.code == null) {
+      //this.setCardInfo(results2[0]);
+      //this.cardcardInfo = this.cardcardInfo.getValue();
+      this.cardcardInfo = results2[0];
+      if (this.cardcardInfo.code !== null && this.cardcardInfo.estado === 'N') {
+        this.hasResponse = true;
+        this.cardcardInfo.estado = 'S';
+        this.cardcardInfo.fecha_uso = new Date().toISOString();
+        //const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
+        //alert('Access Granted and updated');
+        //this.share.showToastColor('', 'Access Granted and updated', 's');
+        console.log('Access Granted and updated');
+        this.card = '';
+        //localStorage.removeItem('tarjeta');
+      } else {
+        alert(this.cardcardInfo.message);
+        this.hasResponse = false;
+        this.card = '';
+        //localStorage.removeItem('tarjeta');
+      }
+    } else {
+      this.card = '';
+      localStorage.removeItem('tarjeta');
+      this.share.showToastColor('', results2.message, 'w');
+    }
   }
   onNfc(nfcEvent) {
 
@@ -220,17 +251,17 @@ export class AppComponent implements OnInit {
       const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
       if (results.code == null) {
         this.cardInfo = results[0];
-        if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
+        if (this.cardcardInfo.code !== null && this.cardcardInfo.estado === 'N') {
           this.hasResponse = true;
-          this.cardInfo.estado = 'S';
-          this.cardInfo.fecha_uso = new Date().toISOString();
+          this.cardcardInfo.estado = 'S';
+          this.cardcardInfo.fecha_uso = new Date().toISOString();
           const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
           alert('Access Granted and updated');
           console.log('Access Granted and updated');
           this.card = '';
           localStorage.removeItem('tarjeta');
         } else {
-          alert(this.cardInfo.message);
+          alert(this.cardcardInfo.message);
           this.hasResponse = false;
           this.card = '';
           localStorage.removeItem('tarjeta');
@@ -246,4 +277,8 @@ export class AppComponent implements OnInit {
       this.share.showToastColor('', ex.message, 'd');
     }
   }
+  setCardInfo(info: any) {
+    this.cardInfo.next(info);
+  };
+
 }
