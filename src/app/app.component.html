@@ -1,50 +1,26 @@
 <ion-app>
-  <!-- <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
-      <ion-content>
-        <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi@ionicframework.com</ion-note>
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <ion-label>Ingrese su IP:</ion-label>
+        <ion-input [(ngModel)]="ip" placeholder="Enter IP" [readonly]="editConf"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Ingrese su Puerto:</ion-label>
+        <ion-input [(ngModel)]="port" type="number" placeholder="Enter Port Number" [readonly]="editConf"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-button slot="start" (click)="configurar()" color="warning">Configurar</ion-button>
+        <ion-button slot="end" (click)="saveConfig()" color="success">Guardar</ion-button>
+      </ion-item>
 
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
-            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
-              <ion-label>{{ p.title }}</ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
-
-        <ion-list id="labels-list">
-          <ion-list-header>Labels</ion-list-header>
-
-          <ion-item *ngFor="let label of labels" lines="none">
-            <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
-            <ion-label>{{ label }}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-content>
-    </ion-menu>
-    <ion-router-outlet id="main-content"></ion-router-outlet>
-  </ion-split-pane> -->
-  <ion-list>
+      <ion-item (click)="processRead()" button color="warning">
+        Leer Tarjeta
+      </ion-item>
+    </ion-list>
     <ion-item>
-      <ion-label>Ingrese su IP:</ion-label>
-      <ion-input [(ngModel)]="ip" placeholder="Enter IP" [readonly]="editConf"></ion-input>
+      <ion-title style="font-style: bolder" color="bscYellow" class="titulo">Control de acceso</ion-title>
     </ion-item>
-    <ion-item>
-      <ion-label>Ingrese su Puerto:</ion-label>
-      <ion-input [(ngModel)]="port" type="number" placeholder="Enter Port Number" [readonly]="editConf"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-button slot="start" (click)="configurar()" color="warning">Configurar</ion-button>
-      <ion-button slot="end" (click)="saveConfig()" color="success">Guardar</ion-button>
-    </ion-item>
-  </ion-list>
-  <ion-button (click)="processRead()" color="warning">Leer Tarjeta</ion-button>
-
-
-  <ion-item>
-    <ion-title style="font-style: bolder" color="bscYellow" class="titulo">Control de acceso</ion-title>
     <ion-grid [hidden]="!this.hasResponse">
       <ion-row>
         <ion-col size="11.8" size-lg class="padding-0">
@@ -73,6 +49,5 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-  </ion-item>
-
+  </ion-content>
 </ion-app>

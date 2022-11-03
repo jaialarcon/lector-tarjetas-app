@@ -140,6 +140,8 @@ export class AppComponent implements OnInit {
         this.cardInfo = results[0];
         if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
           this.hasResponse = true;
+          this.cardInfo.estado = 'S';
+          this.cardInfo.fecha_uso = new Date().toISOString();
           const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
           alert('Access Granted and updated');
           console.log('Access Granted and updated');
