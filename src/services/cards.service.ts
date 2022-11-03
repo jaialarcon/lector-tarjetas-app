@@ -35,7 +35,7 @@ export class CardsService {
         'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, DELETE, PUT',
         'Access-Control-Allow-Headers':
           'append,delete,entries,foreach,get,has,keys,set,values,Authorization',
-        Authorization: JSON.parse(sessionStorage.getItem('tokenP')) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        //Authorization: JSON.parse(sessionStorage.getItem('tokenP')) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
 
       }),
     };

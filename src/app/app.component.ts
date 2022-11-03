@@ -1,7 +1,9 @@
+/* eslint-disable curly */
 /* eslint-disable @typescript-eslint/quotes */
 import { Component, OnInit } from '@angular/core';
 import { NFC, Ndef } from '@awesome-cordova-plugins/nfc/ngx';
 import { CardsService } from 'src/services/cards.service';
+import { SharedService } from 'src/services/shared.services';
 import { ENV } from '../environments/environment';
 
 @Component({
@@ -10,16 +12,23 @@ import { ENV } from '../environments/environment';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
+
+  editConf = true;
   hasResponse: boolean;
-  public ip?: string;
+  public ip?: string = '';
+  public port?: string = '';
   card: any;
   cardInfo: any;
   public dir: string;
-  public port?: string;
   public requestURL: string;
   readerMode$: any;
   info: any;
-  constructor(private nfc: NFC, private ndef: Ndef, private cardService: CardsService,) { }
+  constructor(
+    private nfc: NFC,
+    private ndef: Ndef,
+    private cardService: CardsService,
+    private share: SharedService
+  ) { }
 
   async ngOnInit() {
     this.info = {
@@ -58,10 +67,18 @@ export class AppComponent implements OnInit {
   }
 
   configurar() {
-    this.requestURL = "";
-    //http://localhost:8080/cardService/v1/findByCode/6834452
-    this.requestURL = 'http://' + this.ip + ':' + this.port + '/cardService/v1';
-    //environment.apiURL = this.requestURL;
+    this.editConf = !this.editConf;
+  }
+  saveConfig() {
+    if (this.ip !== '' && this.port !== '') {
+      this.requestURL = "";
+      //http://localhost:8080/cardService/v1/findByCode/6834452
+      this.requestURL = 'http://' + this.ip + ':' + this.port + '/cardService/v1';
+      this.editConf = true;
+      this.share.showToastColor('', "IP y puerto actualizados correctamente.", 's');
+    } else {
+      this.share.showToastColor('', "IP o puerto vacío", 'w');
+    }
   }
 
   convertHex2Bin(hex: string) {
@@ -119,20 +136,24 @@ export class AppComponent implements OnInit {
       const cardCode = this.convertNumber(processedString, 2, 10);
       console.log("NUMERO ESPERADO:", cardCode);
       const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
-      this.cardInfo = results[0];
-      if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
-        this.hasResponse = true;
-        const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
-        alert('Access Granted and updated');
-        console.log('Access Granted and updated');
+      if (results.code == null) {
+        this.cardInfo = results[0];
+        if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
+          this.hasResponse = true;
+          const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
+          alert('Access Granted and updated');
+          console.log('Access Granted and updated');
+        } else {
+          alert(this.cardInfo.message);
+          this.hasResponse = false;
+        }
       } else {
-        alert(this.cardInfo.message);
-        this.hasResponse = false;
+        this.share.showToastColor('', results.message, 'w');
       }
 
     } catch (ex) {
       console.log(ex);
-
+      this.share.showToastColor('', ex.message, 'd');
     }
   }
 }
