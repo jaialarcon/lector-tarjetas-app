@@ -17,12 +17,13 @@ export class AppComponent implements OnInit {
   contador = 0;
   editConf = true;
   nfcEnabled = false;
+  contador2 = 0;
   hasResponse: boolean;
   public ip?: string = '';
   public port?: string = '';
   card: any;
   cardcardInfo: any;
-  cardInfo: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  cardInfo: any;
   public dir: string;
   public requestURL: string;
   readerMode$: any;
@@ -75,7 +76,7 @@ export class AppComponent implements OnInit {
       console.log("NFC DISABLED");
     }
   }
-  async readCard() {
+   readCard() {
     // Read NFC Tag - Android
     // Once the reader mode is enabled, any tags that are scanned are sent to the subscriber
     // eslint-disable-next-line no-bitwise
@@ -92,27 +93,28 @@ export class AppComponent implements OnInit {
             this.card = this.nfc.bytesToHexString(tag.id) ; 
             console.log(this.card);
             const serialNumber = this.card;
-            const processedString = this.convertNumber(serialNumber, 16, 2);
-            const cardCode = this.convertNumber(processedString, 2, 10);
+            const reversed = serialNumber.slice(-2) +serialNumber.slice(4,6)+ serialNumber.slice(2,4) + serialNumber.slice(0,2);
+            const firstBin = this.convertNumber(reversed,16,2);
+            const cardCode = this.convertNumber(firstBin, 2, 10);
             console.log("NUMERO ESPERADO:", cardCode);
             const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
             localStorage.setItem("results",JSON.stringify(results));
             if (results.code == null) {
-              this.setCardInfo(results[0]);
-              this.cardcardInfo = this.cardcardInfo.getValue();
+              //this.setCardInfo(results[0]);
               this.cardInfo = results[0];
-              if (this.cardcardInfo.code !== null && this.cardcardInfo.estado === 'N') {
+              if (this.cardInfo.code !== null && this.cardInfo.estado === 'N') {
                 this.hasResponse = true;
-                this.cardcardInfo.estado = 'S';
-                this.cardcardInfo.fecha_uso = new Date().toISOString();
+                this.cardInfo.estado = 'S';
+                this.cardInfo.fecha_uso = new Date().toISOString();
                 const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
                 //alert('Access Granted and updated');
                 this.share.showToastColor('', 'Access Granted and updated', 's');
+                this.contador2+=1;
                 console.log('Access Granted and updated');
                 this.card = '';
                 //localStorage.removeItem('tarjeta');
               } else {
-                alert(this.cardcardInfo.message);
+                alert(this.cardInfo.message);
                 this.hasResponse = false;
                 this.card = '';
                 //localStorage.removeItem('tarjeta');
@@ -136,7 +138,8 @@ export class AppComponent implements OnInit {
       },
       (err) => console.log('Error reading tag', err)
     );
-    const results2 =  JSON.parse(localStorage.getItem("results"));
+    if(this.contador2>0){
+      const results2 =  JSON.parse(localStorage.getItem("results"));
     if (results2.code == null) {
       //this.setCardInfo(results2[0]);
       //this.cardcardInfo = this.cardcardInfo.getValue();
@@ -162,6 +165,8 @@ export class AppComponent implements OnInit {
       localStorage.removeItem('tarjeta');
       this.share.showToastColor('', results2.message, 'w');
     }
+    }
+    
   }
   onNfc(nfcEvent) {
 
@@ -215,22 +220,22 @@ export class AppComponent implements OnInit {
     if (toBase === void 0) {
       toBase = 10;
     }
-    if (toBase === 2) {
-      converted = parseInt(n, fromBase).toString(toBase);
-      if (converted.length > 23) {
-        console.log("tiene >23");
-        converted = converted.slice(-23);
-        console.log("converted provisional >23", converted);
-      } else {
-        console.log("no tiene");
-        converted = converted;
-        console.log("converted provisional <23", converted);
-      }
-
+    if (fromBase === 2) {
+      console.log("BIN",n);
+      
+      if (n.length > 23) {
+      //console.log("tiene >23");
+      converted = parseInt(n.slice(-23), fromBase).toString(toBase);
+      console.log("converted provisional >23", converted);
+    } else {
+      //console.log("no tiene");
+      converted = converted;
+      console.log("converted provisional <23", converted);
     }
-    else {
-      converted = (parseInt(n, fromBase)).toString(toBase);
-    }
+  }
+  else {
+    converted = (parseInt(n, fromBase)).toString(toBase);
+  }
 
     return converted;//parseInt(n.toString(), fromBase).toString(toBase);
   }
