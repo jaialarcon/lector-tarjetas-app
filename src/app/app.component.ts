@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/semi */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable curly */
 /* eslint-disable @typescript-eslint/quotes */
@@ -39,21 +40,21 @@ export class AppComponent implements OnInit {
   ) { }
   async ionViewWillEnter() {
     this.nfcEnabled = await ((await this.nfc.enabled()).toPromise());
-    console.log("IS ENABLED", this.nfcEnabled);
+    //console.log("IS ENABLED", this.nfcEnabled);
 
     if (this.nfcEnabled) {
-      console.log("NFC ENABLED");
+      //console.log("NFC ENABLED");
       this.nfc.addNdefListener(() => {
-        console.log('successfully attached ndef listener');
+        //console.log('successfully attached ndef listener');
       }, (err) => {
-        console.log('error attaching ndef listener', err);
+        //console.log('error attaching ndef listener', err);
       }).subscribe((event) => {
-        console.log('received ndef message. the tag contains: ', event.tag);
-        console.log('decoded tag id', this.nfc.bytesToHexString(event.tag.id));
+        //console.log('received ndef message. the tag contains: ', event.tag);
+        //console.log('decoded tag id', this.nfc.bytesToHexString(event.tag.id));
       });
     }
     else {
-      console.log("NFC DISABLED");
+      //console.log("NFC DISABLED");
     }
   }
   async ngOnInit() {
@@ -61,25 +62,27 @@ export class AppComponent implements OnInit {
       puerta: 1,
       localidades: 'Palcos 1'
     };
+
+    this.executeTask();
+
     this.nfcEnabled = await ((await this.nfc.enabled()).toPromise());
-    console.log("IS ENABLED", this.nfcEnabled);
+    //console.log("IS ENABLED", this.nfcEnabled);
 
     if (this.nfcEnabled) {
-      console.log("NFC ENABLED");
+      //console.log("NFC ENABLED");
       this.nfc.addNdefListener(() => {
-        console.log('successfully attached ndef listener');
+        //console.log('successfully attached ndef listener');
       }, (err) => {
-        console.log('error attaching ndef listener', err);
+        //console.log('error attaching ndef listener', err);
       }).subscribe((event) => {
-        console.log('received ndef message. the tag contains: ', event.tag);
-        console.log('decoded tag id', this.nfc.bytesToHexString(event.tag.id));
+        //console.log('received ndef message. the tag contains: ', event.tag);
+        //console.log('decoded tag id', this.nfc.bytesToHexString(event.tag.id));
       });
     }
     else {
-      console.log("NFC DISABLED");
+      //console.log("NFC DISABLED");
     }
 
-    this.executeTask();
   }
   readCard() {
     // Read NFC Tag - Android
@@ -88,20 +91,20 @@ export class AppComponent implements OnInit {
     const flags = this.nfc.FLAG_READER_NFC_A | this.nfc.FLAG_READER_NFC_V;
     this.readerMode$ = this.nfc.readerMode(flags).subscribe(
       async (tag) => {
-        console.log(JSON.stringify(tag));
-        console.log('decoded tag id', this.nfc.bytesToHexString(tag.id));
-        console.log("Estoy enabled");
+        //console.log(JSON.stringify(tag));
+        //console.log('decoded tag id', this.nfc.bytesToHexString(tag.id));
+        //console.log("Estoy enabled");
         if (this.contador > 0) {
-          console.log("habilitado");
+          //console.log("habilitado");
           try {
             //await this.readCard();
             this.card = this.nfc.bytesToHexString(tag.id);
-            console.log(this.card);
+            //console.log(this.card);
             const serialNumber = this.card;
             const reversed = serialNumber.slice(-2) + serialNumber.slice(4, 6) + serialNumber.slice(2, 4) + serialNumber.slice(0, 2);
             const firstBin = this.convertNumber(reversed, 16, 2);
             const cardCode = this.convertNumber(firstBin, 2, 10);
-            console.log("NUMERO ESPERADO:", cardCode);
+            //console.log("NUMERO ESPERADO:", cardCode);
             const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
             localStorage.setItem("results", JSON.stringify(results));
             if (results.code == null) {
@@ -116,7 +119,7 @@ export class AppComponent implements OnInit {
                 //alert('Access Granted and updated');
                 this.share.showToastColor('', 'Access Granted and updated', 's');
                 this.contador2 += 1;
-                console.log('Access Granted and updated');
+                //console.log('Access Granted and updated');
                 this.card = '';
                 //localStorage.removeItem('tarjeta');
               } else {
@@ -132,7 +135,7 @@ export class AppComponent implements OnInit {
             }
 
           } catch (ex) {
-            console.log(ex);
+            //console.log(ex);
             this.share.showToastColor('', ex.message, 'd');
           }
 
@@ -158,7 +161,7 @@ export class AppComponent implements OnInit {
           //alert('Access Granted and updated');
           //this.share.showToastColor('', 'Access Granted and updated', 's');
           sessionStorage.setItem('card', JSON.stringify(this.cardcardInfo));
-          console.log('Access Granted and updated');
+          //console.log('Access Granted and updated');
           this.card = '';
           //localStorage.removeItem('tarjeta');
         } else {
@@ -177,22 +180,19 @@ export class AppComponent implements OnInit {
   }
 
   executeTask() {
-    this.asyncTask = setInterval(() => { this.readSessionStorageCard(); }, 1000);
+    this.asyncTask = setInterval(() => { this.readSessionStorageCard() }, 1000);
   }
 
   readSessionStorageCard() {
-    console.log('EJECUTANDO TAREA');
-
     const card = JSON.parse(sessionStorage.getItem('card'));
     if (card !== null || card !== '') {
-      console.log('Cargando tarjeta');
       this.cardcardInfo = card;
     }
   }
 
   onNfc(nfcEvent) {
 
-    console.log(nfcEvent.tag);
+    //console.log(nfcEvent.tag);
 
     const message = [
       // eslint-disable-next-line no-new-wrappers
@@ -243,16 +243,16 @@ export class AppComponent implements OnInit {
       toBase = 10;
     }
     if (fromBase === 2) {
-      console.log("BIN", n);
+      //console.log("BIN", n);
 
       if (n.length > 23) {
-        //console.log("tiene >23");
+        ////console.log("tiene >23");
         converted = parseInt(n.slice(-23), fromBase).toString(toBase);
-        console.log("converted provisional >23", converted);
+        //console.log("converted provisional >23", converted);
       } else {
-        //console.log("no tiene");
+        ////console.log("no tiene");
         converted = converted;
-        console.log("converted provisional <23", converted);
+        //console.log("converted provisional <23", converted);
       }
     }
     else {
@@ -270,11 +270,11 @@ export class AppComponent implements OnInit {
     try {
       await this.readCard();
       this.card = JSON.parse(localStorage.getItem('tarjeta'));
-      console.log(this.card);
+      //console.log(this.card);
       const serialNumber = this.card;
       const processedString = this.convertNumber(serialNumber, 16, 2);
       const cardCode = this.convertNumber(processedString, 2, 10);
-      console.log("NUMERO ESPERADO:", cardCode);
+      //console.log("NUMERO ESPERADO:", cardCode);
       const results = await (await this.cardService.findByCode(this.requestURL, cardCode)).toPromise();
       if (results.code == null) {
         this.cardInfo = results[0];
@@ -284,7 +284,7 @@ export class AppComponent implements OnInit {
           this.cardcardInfo.fecha_uso = new Date().toISOString();
           const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
           alert('Access Granted and updated');
-          console.log('Access Granted and updated');
+          //console.log('Access Granted and updated');
           this.card = '';
           localStorage.removeItem('tarjeta');
         } else {
@@ -300,7 +300,7 @@ export class AppComponent implements OnInit {
       }
 
     } catch (ex) {
-      console.log(ex);
+      //console.log(ex);
       this.share.showToastColor('', ex.message, 'd');
     }
   }
