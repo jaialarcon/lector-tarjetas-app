@@ -111,6 +111,7 @@ export class AppComponent implements OnInit {
                 this.hasResponse = true;
                 this.cardInfo.estado = 'S';
                 this.cardInfo.fecha_uso = new Date().toISOString();
+                sessionStorage.setItem('card', JSON.stringify(this.cardInfo));
                 const responseUpdate = await (await this.cardService.updateState(this.requestURL, this.cardInfo)).toPromise();
                 //alert('Access Granted and updated');
                 this.share.showToastColor('', 'Access Granted and updated', 's');
@@ -180,8 +181,11 @@ export class AppComponent implements OnInit {
   }
 
   readSessionStorageCard() {
+    console.log('EJECUTANDO TAREA');
+
     const card = JSON.parse(sessionStorage.getItem('card'));
     if (card !== null || card !== '') {
+      console.log('Cargando tarjeta');
       this.cardcardInfo = card;
     }
   }
