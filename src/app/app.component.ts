@@ -8,7 +8,7 @@ import { CardsService } from 'src/services/cards.service';
 import { SharedService } from 'src/services/shared.services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ENV } from '../environments/environment';
-import Encryptor from './Encryptor';
+// import Encryptor, { aesUtil, AESUtil } from './Encryptor';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ import Encryptor from './Encryptor';
 export class AppComponent implements OnInit {
   contador = 0;
   editConf = true;
-  encryptor: Encryptor;
+  // encryptor: Encryptor;
   nfcEnabled = false;
   contador2 = 0;
   hasResponse: boolean;
@@ -310,15 +310,22 @@ export class AppComponent implements OnInit {
     this.cardInfo.next(info);
   };
   testEncryptor(){
-    this.encryptor = new Encryptor()
-    this.encryptor.setKey("granda99!")
-    let testing = null;
-    let resp1 = "ESTO ES UNA PRUEBA"
-    let respENC = this.encryptor.encrypt(resp1)
-    console.log(respENC)
-    testing = this.encryptor.decrypt(respENC)
+    // this.encryptor = new Encryptor()
+    // this.encryptor.setKey("granda99!")
+    // let testing = null;
+    // let resp1 = "ESTO ES UNA PRUEBA"
+    // let respENC = this.encryptor.encrypt(resp1)
+    // console.log(respENC)
+    // testing = this.encryptor.decrypt(respENC)
 
-    console.log("DECRYPTED",testing);
+    // console.log("DECRYPTED",testing);
+
+    
+    // const enc = aesUtil.encrypt("mypassword123", "plain text");
+    // const dec = aesUtil.decrypt("mypassword123", "ciphertext");
+
+    // console.log("ENC",enc)
+    // console.log("DEC",dec)
   }
 
 }
