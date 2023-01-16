@@ -116,19 +116,20 @@ export class AESUtil {
     const decrypted = CryptoJS.AES.decrypt(cipherParams, key, {
       iv: CryptoJS.enc.Hex.parse(iv)
     });
+    console.log('dec dentro de la func es:',decrypted.toString(CryptoJS.enc.Utf8));
     return decrypted.toString(CryptoJS.enc.Utf8);
   }
 
   encrypt(passPhrase, plainText) {
-    const iv = CryptoJS.lib.WordArray.random(this._ivSize / 8).toString(CryptoJS.enc.Hex);
-    const salt = CryptoJS.lib.WordArray.random(this.keySize / 8).toString(CryptoJS.enc.Hex);
+    const iv = CryptoJS.lib.WordArray.random(this.getivSize() / 8).toString(CryptoJS.enc.Hex);
+    const salt = CryptoJS.lib.WordArray.random(this.getkeySize() / 8).toString(CryptoJS.enc.Hex);
     const ciphertext = this.encryptWithIvSalt(salt, iv, passPhrase, plainText);
     return salt + iv + ciphertext;
   }
 
   decrypt(passPhrase, cipherText) {
-    const ivLength = this._ivSize / 4;
-    const saltLength = this.keySize / 4;
+    const ivLength = this.getivSize() / 4;
+    const saltLength = this.getkeySize() / 4;
     const salt = cipherText.substr(0, saltLength);
     const iv = cipherText.substr(saltLength, ivLength);
     const encrypted = cipherText.substring(ivLength + saltLength);
