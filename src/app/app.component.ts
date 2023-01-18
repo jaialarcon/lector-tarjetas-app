@@ -8,9 +8,7 @@ import { CardsService } from 'src/services/cards.service';
 import { SharedService } from 'src/services/shared.services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ENV } from '../environments/environment';
-import { aesUtil } from './Encryptor';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-// import Encryptor, { aesUtil, AESUtil } from './Encryptor';
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +18,6 @@ import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
 export class AppComponent implements OnInit {
   contador = 0;
   editConf = true;
-  // encryptor: Encryptor;
   nfcEnabled = false;
   contador2 = 0;
   hasResponse: boolean;
@@ -311,28 +308,9 @@ export class AppComponent implements OnInit {
   setCardInfo(info: any) {
     this.cardInfo.next(info);
   };
-  testEncryptor(){
-    // this.encryptor = new Encryptor()
-    // this.encryptor.setKey("granda99!")
-    // let testing = null;
-    // let resp1 = "ESTO ES UNA PRUEBA"
-    // let respENC = this.encryptor.encrypt(resp1)
-    // console.log(respENC)
-    // testing = this.encryptor.decrypt(respENC)
-
-    // console.log("DECRYPTED",testing);
-
-
-    const enc = aesUtil.encrypt("mypassword123", "plain text");
-    const dec = aesUtil.decrypt("mypassword123", "ciphertext");
-
-    console.log("ENC",enc)
-    console.log("DEC",dec)
-  }
-
-
 
 }
+
 //MANAJE JSON FILE npm install @capacitor/filesystem
 const writeSecretFile = async () => {
   await Filesystem.writeFile({
